@@ -1,0 +1,3 @@
+[submodule "DeskBooking.UI"]
+	path = DeskBooking.UI
+	url = https://github.com/YaroslavTerekh/Application.UI.git
