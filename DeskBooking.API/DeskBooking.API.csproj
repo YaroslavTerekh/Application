@@ -14,4 +14,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DeskBooking.Domain\DeskBooking.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
