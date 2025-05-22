@@ -20,5 +20,5 @@ public class Room : BaseEntity
 
     public List<OpenspaceDesk> OpenspaceDesks { get; set; } = [];
 
-    public List<Amenity> Amenities { get; set; } = [];
+    public List<RoomAmenity> Amenities { get; set; } = [];
 }

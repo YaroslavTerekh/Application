@@ -3,6 +3,7 @@ using System;
 using DeskBooking.Domain.DatabaseConnection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskBooking.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250522155923_AddRoomAmenityTable")]
+    partial class AddRoomAmenityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,9 +168,14 @@ namespace DeskBooking.Domain.Migrations
                     b.Property<Guid>("AmenityId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AmenityId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("RoomId", "AmenityId");
 
                     b.HasIndex("AmenityId");
+
+                    b.HasIndex("AmenityId1");
 
                     b.ToTable("RoomAmenity");
                 });
@@ -208,21 +216,21 @@ namespace DeskBooking.Domain.Migrations
 
             modelBuilder.Entity("DeskBooking.Domain.Entities.RoomAmenity", b =>
                 {
-                    b.HasOne("DeskBooking.Domain.Entities.Amenity", "Amenity")
-                        .WithMany("Rooms")
+                    b.HasOne("DeskBooking.Domain.Entities.Amenity", null)
+                        .WithMany()
                         .HasForeignKey("AmenityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DeskBooking.Domain.Entities.Room", "Room")
+                    b.HasOne("DeskBooking.Domain.Entities.Amenity", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("AmenityId1");
+
+                    b.HasOne("DeskBooking.Domain.Entities.Room", null)
                         .WithMany("Amenities")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Amenity");
-
-                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("DeskBooking.Domain.Entities.Amenity", b =>

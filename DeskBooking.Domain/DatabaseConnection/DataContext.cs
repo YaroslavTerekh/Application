@@ -1,4 +1,5 @@
-﻿using DeskBooking.Domain.Entities;
+﻿using DeskBooking.Domain.DatabaseConnection.Configuration;
+using DeskBooking.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,13 @@ public class DataContext : DbContext
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<OpenspaceDesk> OpenspaceDesks { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<RoomAmenity> RoomAmenity { get; set; }
     public DbSet<Room> Rooms { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new RoomAmenityConfiguration());
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
