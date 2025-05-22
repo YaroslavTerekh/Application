@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DeskBooking.Domain.DatabaseConnection.DataSeeding;
 
-public static class DataContextSeedExtension
+public static class DataContextSeeding
 {
     public static async Task SeedBasicDataAsync(DataContext context) 
     {
@@ -32,7 +32,6 @@ public static class DataContextSeedExtension
                 }
 
                 await context.Amenities.AddRangeAsync(amenities);
-                await context.SaveChangesAsync();
             }
 
             #region Open space 
@@ -44,7 +43,6 @@ public static class DataContextSeedExtension
             };
 
             await context.Rooms.AddAsync(openspace);
-            await context.SaveChangesAsync();
 
             for (int i = 1; i < 24; i++)
             {
@@ -55,7 +53,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.OpenspaceDesks.AddAsync(desk);
-                await context.SaveChangesAsync();
             }
 
             var openspaceAmenities = new List<RoomAmenity>();
@@ -85,7 +82,6 @@ public static class DataContextSeedExtension
             });
 
             await context.RoomAmenity.AddRangeAsync(openspaceAmenities);
-            await context.SaveChangesAsync();
             #endregion
 
             #region Private rooms
@@ -100,7 +96,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.Rooms.AddAsync(room);
-                await context.SaveChangesAsync();
 
                 var privateRoomAmenities = new List<RoomAmenity>();
 
@@ -123,7 +118,6 @@ public static class DataContextSeedExtension
                 });
 
                 await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-                await context.SaveChangesAsync();
 
             }
 
@@ -138,7 +132,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.Rooms.AddAsync(room);
-                await context.SaveChangesAsync();
 
                 var privateRoomAmenities = new List<RoomAmenity>();
 
@@ -161,7 +154,6 @@ public static class DataContextSeedExtension
                 });
 
                 await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-                await context.SaveChangesAsync();
 
             }
 
@@ -176,7 +168,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.Rooms.AddAsync(room);
-                await context.SaveChangesAsync();
 
                 var privateRoomAmenities = new List<RoomAmenity>();
 
@@ -199,8 +190,6 @@ public static class DataContextSeedExtension
                 });
 
                 await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-                await context.SaveChangesAsync();
-
             }
 
             for (int i = 0; i == 0; i++)
@@ -214,7 +203,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.Rooms.AddAsync(room);
-                await context.SaveChangesAsync();
 
                 var privateRoomAmenities = new List<RoomAmenity>();
 
@@ -237,8 +225,6 @@ public static class DataContextSeedExtension
                 });
 
                 await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-                await context.SaveChangesAsync();
-
             }
             #endregion
 
@@ -254,7 +240,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.Rooms.AddAsync(meeting);
-                await context.SaveChangesAsync();
 
                 var meetingRoomAmenities = new List<RoomAmenity>();
 
@@ -283,7 +268,6 @@ public static class DataContextSeedExtension
                 });
 
                 await context.RoomAmenity.AddRangeAsync(meetingRoomAmenities);
-                await context.SaveChangesAsync();
             }
 
             for (int i = 0; i == 0; i++)
@@ -297,7 +281,6 @@ public static class DataContextSeedExtension
                 };
 
                 await context.Rooms.AddAsync(meeting);
-                await context.SaveChangesAsync();
 
                 var meetingRoomAmenities = new List<RoomAmenity>();
 
@@ -326,7 +309,6 @@ public static class DataContextSeedExtension
                 });
 
                 await context.RoomAmenity.AddRangeAsync(meetingRoomAmenities);
-                await context.SaveChangesAsync();
             }
             #endregion
         }

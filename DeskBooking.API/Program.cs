@@ -1,5 +1,5 @@
 using DeskBooking.Domain.DatabaseConnection;
-using static DeskBooking.Domain.DatabaseConnection.DataSeeding.DataContextSeedExtension;
+using static DeskBooking.Domain.DatabaseConnection.DataSeeding.DataContextSeeding;
 using Microsoft.EntityFrameworkCore;
 using System;
 
