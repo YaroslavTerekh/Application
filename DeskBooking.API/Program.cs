@@ -1,4 +1,5 @@
 using DeskBooking.Domain.DatabaseConnection;
+using static DeskBooking.Domain.DatabaseConnection.DataSeeding.DataContextSeedExtension;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -15,6 +16,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+var scope = app.Services.CreateScope();
+
+await SeedBasicDataAsync(scope.ServiceProvider.GetRequiredService<DataContext>());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

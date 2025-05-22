@@ -13,4 +13,6 @@ public class Amenity : BaseEntity
     public required string AmenityName { get; set; }
 
     public AmenityType AmenityType { get; set; }
+
+    public List<RoomAmenity> Rooms { get; set; } = [];
 }
