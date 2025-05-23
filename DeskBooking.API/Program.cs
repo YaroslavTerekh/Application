@@ -1,19 +1,26 @@
 using DeskBooking.Domain.DatabaseConnection;
 using static DeskBooking.Domain.DatabaseConnection.DataSeeding.DataContextSeeding;
+using DeskBooking.BL.Behaviours;
 using Microsoft.EntityFrameworkCore;
 using System;
+using DeskBooking.Domain.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-
 builder.Services.AddControllers();
+
+builder.Services.AddMediatr();
+
+builder.Services.AddMapper();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 var scope = app.Services.CreateScope();
