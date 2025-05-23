@@ -4,6 +4,7 @@ using DeskBooking.BL.Behaviours;
 using Microsoft.EntityFrameworkCore;
 using System;
 using DeskBooking.Domain.DTOs;
+using DeskBooking.BL.CustomMiddlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
