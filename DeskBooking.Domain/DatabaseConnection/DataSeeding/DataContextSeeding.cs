@@ -12,9 +12,9 @@ namespace DeskBooking.Domain.DatabaseConnection.DataSeeding;
 
 public static class DataContextSeeding
 {
-    public static async Task SeedBasicDataAsync(DataContext context) 
+    public static async Task SeedBasicDataAsync(DataContext context)
     {
-        if(!await context.Rooms.AnyAsync())
+        if (!await context.Rooms.AnyAsync())
         {
             List<Amenity> amenities = [];
             List<Room> rooms = [];
@@ -82,6 +82,21 @@ public static class DataContextSeeding
             });
 
             await context.RoomAmenity.AddRangeAsync(openspaceAmenities);
+
+            var images = new List<string>()
+            {
+                "openspace1.png",
+                "openspace2.png",
+                "openspace3.png"
+            }.Select(path => new RoomPhoto
+            {
+                RoomId = openspace.Id,
+                Description = path,
+                ImagePath = path,
+                ImageName = path,
+            }).ToList();
+
+            await context.RoomPhoto.AddRangeAsync(images);
             #endregion
 
             #region Private rooms
@@ -118,6 +133,24 @@ public static class DataContextSeeding
                 });
 
                 await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
+
+                if (i == 0)
+                {
+                    var privateImages = new List<string>
+        {
+            "private1.png",
+            "private2.png",
+            "private3.png"
+        }.Select(path => new RoomPhoto
+        {
+            RoomId = room.Id,
+            Description = path,
+            ImagePath = path,
+            ImageName = path,
+        }).ToList();
+
+                    await context.RoomPhoto.AddRangeAsync(privateImages);
+                }
 
             }
 
@@ -229,7 +262,7 @@ public static class DataContextSeeding
             #endregion
 
             #region Meeting rooms
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 var meeting = new Room
                 {
@@ -309,6 +342,21 @@ public static class DataContextSeeding
                 });
 
                 await context.RoomAmenity.AddRangeAsync(meetingRoomAmenities);
+
+                var privateImages = new List<string>()
+                {
+                    "meeting1.png",
+                    "meeting2.png",
+                    "meeting3.png"
+                }.Select(path => new RoomPhoto
+                {
+                    RoomId = meeting.Id,
+                    Description = path,
+                    ImagePath = path,
+                    ImageName = path,
+                }).ToList();
+
+                await context.RoomPhoto.AddRangeAsync(privateImages);
             }
             #endregion
         }

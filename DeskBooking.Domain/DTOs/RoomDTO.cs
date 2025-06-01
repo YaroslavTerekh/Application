@@ -18,4 +18,6 @@ public class RoomDTO
     public RoomType RoomType { get; set; }
 
     public int? Capacity { get; set; }
+
+    public List<RoomPhotoDTO> Photos { get; set; } = [];
 }

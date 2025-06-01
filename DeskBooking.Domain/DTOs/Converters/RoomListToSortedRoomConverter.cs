@@ -18,6 +18,7 @@ public class RoomListToSortedRoomConverter : ITypeConverter<List<Room>, SortedRo
 
         return new SortedRoomDTO
         {
+            Id = firstRoom != null ? firstRoom.Id : Guid.Empty,
             RoomName = firstRoom != null ? firstRoom.RoomName : "Unknown",
             Description = firstRoom != null ? firstRoom.Description : "",
             RoomType = firstRoom != null ? firstRoom.RoomType : RoomType.Openspace,
@@ -51,7 +52,14 @@ public class RoomListToSortedRoomConverter : ITypeConverter<List<Room>, SortedRo
                         })
                         .ToList()
                 })
-                .ToList()
+                .ToList(),
+            Photos = rooms
+                .SelectMany(r => r.Photos)
+                .Select(photo => new RoomPhotoDTO
+                {
+                    ImagePath = photo.ImagePath
+                })
+                .ToList(),
         };
     }
 }

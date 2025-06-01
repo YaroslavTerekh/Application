@@ -32,10 +32,15 @@ public class GetSpecifiedRoomTypeHandler : IRequestHandler<GetSpecifiedRoomTypeQ
             .GroupBy(r => r.RoomType)
             .ToListAsync(cancellationToken);
 
-        //todo: validate query
+        if (groupedRooms.Count == 0)
+        {
+            throw new NotFoundException(ErrorMessages.TypedRoomsNotFound);
+        }
 
-        return groupedRooms
+        var result =  groupedRooms
             .Select(group => _mapper.Map<SortedRoomDTO>(group.ToList()))
-            .FirstOrDefault();
+            .FirstOrDefault()!;
+
+        return result;
     }
 }

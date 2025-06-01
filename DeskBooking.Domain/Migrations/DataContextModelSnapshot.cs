@@ -81,15 +81,10 @@ namespace DeskBooking.Domain.Migrations
                     b.Property<int>("DeskNumber")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ReservationId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
 
                     b.HasIndex("RoomId");
 
@@ -111,11 +106,18 @@ namespace DeskBooking.Domain.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("OpenspaceDeskId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("RoomType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ScheduledJob")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
@@ -172,12 +174,39 @@ namespace DeskBooking.Domain.Migrations
                     b.ToTable("RoomAmenity");
                 });
 
+            modelBuilder.Entity("DeskBooking.Domain.Entities.RoomPhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomPhoto");
+                });
+
             modelBuilder.Entity("DeskBooking.Domain.Entities.OpenspaceDesk", b =>
                 {
-                    b.HasOne("DeskBooking.Domain.Entities.Reservation", null)
-                        .WithMany("OpenspaceDesks")
-                        .HasForeignKey("ReservationId");
-
                     b.HasOne("DeskBooking.Domain.Entities.Room", "Room")
                         .WithMany("OpenspaceDesks")
                         .HasForeignKey("RoomId")
@@ -225,14 +254,20 @@ namespace DeskBooking.Domain.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("DeskBooking.Domain.Entities.RoomPhoto", b =>
+                {
+                    b.HasOne("DeskBooking.Domain.Entities.Room", "Room")
+                        .WithMany("Photos")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("DeskBooking.Domain.Entities.Amenity", b =>
                 {
                     b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("DeskBooking.Domain.Entities.Reservation", b =>
-                {
-                    b.Navigation("OpenspaceDesks");
                 });
 
             modelBuilder.Entity("DeskBooking.Domain.Entities.Room", b =>
@@ -240,6 +275,8 @@ namespace DeskBooking.Domain.Migrations
                     b.Navigation("Amenities");
 
                     b.Navigation("OpenspaceDesks");
+
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

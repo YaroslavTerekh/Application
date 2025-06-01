@@ -19,6 +19,7 @@ public class DataContext : DbContext
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<RoomAmenity> RoomAmenity { get; set; }
     public DbSet<Room> Rooms { get; set; }
+    public DbSet<RoomPhoto> RoomPhoto { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

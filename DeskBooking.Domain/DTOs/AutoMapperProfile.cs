@@ -18,5 +18,8 @@ class AutoMapperProfile : Profile
         CreateMap<Room, RoomDTO>();
         CreateMap<Amenity, AmenityDTO>();
         CreateMap<List<Room>, SortedRoomDTO>().ConvertUsing<RoomListToSortedRoomConverter>();
+        CreateMap<Reservation, BookingDTO>();
+        CreateMap<AppUser, AppUserDTO>();
+        CreateMap<RoomPhoto, RoomPhotoDTO>();
     }
 }

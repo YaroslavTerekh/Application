@@ -9,6 +9,8 @@ namespace DeskBooking.Domain.DTOs.ResponseModels;
 
 public class SortedRoomDTO
 {
+    public Guid Id { get; set; }
+
     public required string RoomName { get; set; }
 
     public required string Description { get; set; }
@@ -17,14 +19,16 @@ public class SortedRoomDTO
 
     public string? CapacityOptions { get;set; }
 
+    public List<RoomPhotoDTO> Photos { get; set; } = [];
+
     public List<AmenityDTO> Amenities { get; set; } = [];
 
     public List<Avaliability> Avaliabilities { get; set; } = [];
-
 }
 
 public class Avaliability
 {
+
     public int? Capacity { get; set; }
 
     public int? Quantity { get; set; }

@@ -1,4 +1,5 @@
 ﻿using DeskBooking.BL.Behaviours.Rooms.GetAllRooms;
+using DeskBooking.BL.Behaviours.Rooms.GetRoomTypes;
 using DeskBooking.BL.Behaviours.Rooms.GetSpecifiedRoomType;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -23,8 +24,14 @@ public class RoomsController : ControllerBase
         return Ok(await _sender.Send(new GetAllRoomsQuery(), cancellationToken));
     }
 
+    [HttpGet("types")]
+    public async Task<IActionResult> GetAllRoomsTypesAsync(CancellationToken cancellationToken = default)
+    {
+        return Ok(await _sender.Send(new GetRoomTypesQuery(), cancellationToken));
+    }
+
     [HttpPost("sorted")]
-    public async Task<IActionResult> GetAllRoomsAsync([FromBody] GetSpecifiedRoomTypeQuery query, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetSelectedRoomAsync([FromBody] GetSpecifiedRoomTypeQuery  query, CancellationToken cancellationToken = default)
     {
         return Ok(await _sender.Send(query, cancellationToken));
     }
