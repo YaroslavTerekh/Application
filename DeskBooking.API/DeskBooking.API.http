@@ -1,6 +1,3 @@
 @DeskBooking.API_HostAddress = http://localhost:5258
 
-GET {{DeskBooking.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
 ###
