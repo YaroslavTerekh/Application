@@ -3,6 +3,7 @@ using System;
 using DeskBooking.Domain.DatabaseConnection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskBooking.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250530111709_AddScheduledJobIdToReservation")]
+    partial class AddScheduledJobIdToReservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,37 +177,6 @@ namespace DeskBooking.Domain.Migrations
                     b.ToTable("RoomAmenity");
                 });
 
-            modelBuilder.Entity("DeskBooking.Domain.Entities.RoomPhoto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("RoomId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("RoomPhoto");
-                });
-
             modelBuilder.Entity("DeskBooking.Domain.Entities.OpenspaceDesk", b =>
                 {
                     b.HasOne("DeskBooking.Domain.Entities.Room", "Room")
@@ -254,17 +226,6 @@ namespace DeskBooking.Domain.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("DeskBooking.Domain.Entities.RoomPhoto", b =>
-                {
-                    b.HasOne("DeskBooking.Domain.Entities.Room", "Room")
-                        .WithMany("Photos")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Room");
-                });
-
             modelBuilder.Entity("DeskBooking.Domain.Entities.Amenity", b =>
                 {
                     b.Navigation("Rooms");
@@ -275,8 +236,6 @@ namespace DeskBooking.Domain.Migrations
                     b.Navigation("Amenities");
 
                     b.Navigation("OpenspaceDesks");
-
-                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

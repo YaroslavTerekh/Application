@@ -21,4 +21,6 @@ public class Room : BaseEntity
     public List<OpenspaceDesk> OpenspaceDesks { get; set; } = [];
 
     public List<RoomAmenity> Amenities { get; set; } = [];
+
+    public List<RoomPhoto> Photos { get; set; } = [];
 }

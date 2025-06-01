@@ -14,6 +14,7 @@ public class Reservation : BaseEntity
     public Guid RoomId { get; set; }
     public Room? Room { get; set; }
 
+    public required string ScheduledJob { get; set; }
     public RoomType RoomType { get; set; }
-    public List<OpenspaceDesk> OpenspaceDesks { get; set; } = [];
+    public Guid? OpenspaceDeskId { get; set; }
 }
