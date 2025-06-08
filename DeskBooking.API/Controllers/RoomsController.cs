@@ -1,4 +1,5 @@
-﻿using DeskBooking.BL.Behaviours.Rooms.GetAllRooms;
+﻿using DeskBooking.BL.Behaviours.Coworkings.GetAllCoworkings;
+using DeskBooking.BL.Behaviours.Rooms.GetAllRooms;
 using DeskBooking.BL.Behaviours.Rooms.GetRoomTypes;
 using DeskBooking.BL.Behaviours.Rooms.GetSpecifiedRoomType;
 using MediatR;
@@ -18,10 +19,16 @@ public class RoomsController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("all")]
-    public async Task<IActionResult> GetAllRoomsAsync(CancellationToken cancellationToken = default)
+    [HttpGet("coworkings/all")]
+    public async Task<IActionResult> GetAllCoworkingsAsync(CancellationToken cancellationToken = default)
     {
-        return Ok(await _sender.Send(new GetAllRoomsQuery(), cancellationToken));
+        return Ok(await _sender.Send(new GetAllCoworkingsQuery(), cancellationToken));
+    }
+
+    [HttpGet("{id:guid}/all")]
+    public async Task<IActionResult> GetAllRoomsAsync([FromRoute] Guid id,CancellationToken cancellationToken = default)
+    {
+        return Ok(await _sender.Send(new GetAllRoomsQuery(id), cancellationToken));
     }
 
     [HttpGet("types")]

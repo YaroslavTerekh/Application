@@ -20,6 +20,8 @@ public class DataContext : DbContext
     public DbSet<RoomAmenity> RoomAmenity { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RoomPhoto> RoomPhoto { get; set; }
+    public DbSet<Coworking> Coworking { get; set; }
+    public DbSet<CoworkingPhoto> CoworkingPhoto { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -27,6 +27,7 @@ public class GetAllRoomsQueryHandler : IRequestHandler<GetAllRoomsQuery, List<So
     public async Task<List<SortedRoomDTO>> Handle(GetAllRoomsQuery request, CancellationToken cancellationToken)
     {
         var groupedRooms = await _context.Rooms
+            .Where(r => r.CoworkingId == request.CoworkingId)
             .Include(r => r.Photos)
             .Include(r => r.OpenspaceDesks)
             .Include(r => r.Amenities)

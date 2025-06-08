@@ -10,7 +10,4 @@ using System.Threading.Tasks;
 
 namespace DeskBooking.BL.Behaviours.Rooms.GetAllRooms;
 
-public class GetAllRoomsQuery : IRequest<List<SortedRoomDTO>>
-{
-
-}
+public record GetAllRoomsQuery(Guid CoworkingId) : IRequest<List<SortedRoomDTO>>;

@@ -1,10 +1,5 @@
 ﻿using DeskBooking.Domain.Entities.Base;
 using DeskBooking.Domain.Enum.Rooms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeskBooking.Domain.Entities;
 
@@ -17,6 +12,10 @@ public class Room : BaseEntity
     public RoomType RoomType { get; set; }
 
     public int? Capacity { get; set; }
+
+    public Guid CoworkingId { get; set; }
+
+    public Coworking? Coworking { get; set; }
 
     public List<OpenspaceDesk> OpenspaceDesks { get; set; } = [];
 
