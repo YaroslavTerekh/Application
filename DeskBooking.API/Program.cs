@@ -13,12 +13,19 @@ using DeskBooking.BL.Services.Realization;
 using MediatR;
 using FluentValidation;
 using DeskBooking.BL.Behaviours.Auth.Register;
+using DeskBooking.Domain.Common.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddScoped<IGroqAIService, GroqAIService>();
 builder.Services.AddScoped<IReservationJobService, ReservationJobService>();
+
+var groqSettings = builder.Configuration
+        .GetSection("AppSettings:GroqAI")
+        .Get<GroqSettings>();
+builder.Services.AddSingleton(groqSettings);
 
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
 

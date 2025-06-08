@@ -34,12 +34,29 @@ public static class DataContextSeeding
                 await context.Amenities.AddRangeAsync(amenities);
             }
 
+            // Додаємо коворкінг
+            var coworking = new Coworking
+            {
+                Name = "TechHub Lviv",
+                Description = "A modern coworking space for professionals, startups, and freelancers.",
+                Address = "Lviv, Sichovykh Striltsiv St, 15",
+            };
+            await context.Coworking.AddAsync(coworking);
+
+            // Додаємо фото до коворкінгу
+            var coworkingPhotos = new List<CoworkingPhoto>
+        {
+            new CoworkingPhoto { Coworking = coworking, ImageName = "coworking1.png", ImagePath = "coworking1.png", Description = "Main area" },
+        };
+            await context.CoworkingPhoto.AddRangeAsync(coworkingPhotos);
+
             #region Open space 
             var openspace = new Room
             {
                 RoomType = RoomType.Openspace,
                 RoomName = "Open space",
-                Description = "A vibrant shared area perfect for freelancers or small teams who enjoy a collaborative atmosphere. Choose any available desk and get to work with flexibility and ease."
+                Description = "A vibrant shared area perfect for freelancers or small teams who enjoy a collaborative atmosphere. Choose any available desk and get to work with flexibility and ease.",
+                Coworking = coworking
             };
 
             await context.Rooms.AddAsync(openspace);
@@ -49,318 +66,112 @@ public static class DataContextSeeding
                 var desk = new OpenspaceDesk
                 {
                     DeskNumber = i,
-                    RoomId = openspace.Id
+                    Room = openspace
                 };
 
                 await context.OpenspaceDesks.AddAsync(desk);
             }
 
-            var openspaceAmenities = new List<RoomAmenity>();
-
-            openspaceAmenities.Add(new RoomAmenity
-            {
-                AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                RoomId = openspace.Id
-            });
-
-            openspaceAmenities.Add(new RoomAmenity
-            {
-                AmenityId = amenities.Where(a => a.AmenityType == AmenityType.GameConsole).FirstOrDefault()!.Id,
-                RoomId = openspace.Id
-            });
-
-            openspaceAmenities.Add(new RoomAmenity
-            {
-                AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                RoomId = openspace.Id
-            });
-
-            openspaceAmenities.Add(new RoomAmenity
-            {
-                AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Coffee).FirstOrDefault()!.Id,
-                RoomId = openspace.Id
-            });
+            var openspaceAmenities = new List<RoomAmenity>
+        {
+            new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Conditioner).Id, Room = openspace },
+            new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.GameConsole).Id, Room = openspace },
+            new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Wifi).Id, Room = openspace },
+            new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Coffee).Id, Room = openspace },
+        };
 
             await context.RoomAmenity.AddRangeAsync(openspaceAmenities);
 
-            var images = new List<string>()
-            {
-                "openspace1.png",
-                "openspace2.png",
-                "openspace3.png"
-            }.Select(path => new RoomPhoto
-            {
-                RoomId = openspace.Id,
-                Description = path,
-                ImagePath = path,
-                ImageName = path,
-            }).ToList();
-
-            await context.RoomPhoto.AddRangeAsync(images);
+            var openSpacePhotos = new List<RoomPhoto>
+        {
+            new RoomPhoto { Room = openspace, ImageName = "openspace1.png", ImagePath = "openspace1.png", Description = "Open space view 1" },
+            new RoomPhoto { Room = openspace, ImageName = "openspace2.png", ImagePath = "openspace2.png", Description = "Open space view 2" },
+            new RoomPhoto { Room = openspace, ImageName = "openspace3.png", ImagePath = "openspace3.png", Description = "Open space view 3" },
+        };
+            await context.RoomPhoto.AddRangeAsync(openSpacePhotos);
             #endregion
 
             #region Private rooms
-            for (int i = 0; i < 6; i++)
+            foreach ((int count, int capacity) in new[] { (6, 1), (3, 2), (2, 5), (1, 10) })
             {
-                var room = new Room
+                for (int i = 0; i < count; i++)
                 {
-                    RoomType = RoomType.PrivateRoom,
-                    RoomName = "Private rooms",
-                    Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
-                    Capacity = 1,
+                    var room = new Room
+                    {
+                        RoomType = RoomType.PrivateRoom,
+                        RoomName = "Private rooms",
+                        Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
+                        Capacity = capacity,
+                        Coworking = coworking
+                    };
+
+                    await context.Rooms.AddAsync(room);
+
+                    var privateRoomAmenities = new List<RoomAmenity>
+                {
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Conditioner).Id, Room = room },
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Wifi).Id, Room = room },
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Headphone).Id, Room = room },
                 };
 
-                await context.Rooms.AddAsync(room);
+                    await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
 
-                var privateRoomAmenities = new List<RoomAmenity>();
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Headphone).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-
-                if (i == 0)
-                {
-                    var privateImages = new List<string>
-        {
-            "private1.png",
-            "private2.png",
-            "private3.png"
-        }.Select(path => new RoomPhoto
-        {
-            RoomId = room.Id,
-            Description = path,
-            ImagePath = path,
-            ImageName = path,
-        }).ToList();
-
-                    await context.RoomPhoto.AddRangeAsync(privateImages);
+                    if (capacity == 1 && i == 0)
+                    {
+                        var privateImages = new List<RoomPhoto>
+                    {
+                        new RoomPhoto { Room = room, ImageName = "private1.png", ImagePath = "private1.png", Description = "Private room 1" },
+                        new RoomPhoto { Room = room, ImageName = "private2.png", ImagePath = "private2.png", Description = "Private room 2" },
+                        new RoomPhoto { Room = room, ImageName = "private3.png", ImagePath = "private3.png", Description = "Private room 3" },
+                    };
+                        await context.RoomPhoto.AddRangeAsync(privateImages);
+                    }
                 }
-
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                var room = new Room
-                {
-                    RoomType = RoomType.PrivateRoom,
-                    RoomName = "Private rooms",
-                    Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
-                    Capacity = 2,
-                };
-
-                await context.Rooms.AddAsync(room);
-
-                var privateRoomAmenities = new List<RoomAmenity>();
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Headphone).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                var room = new Room
-                {
-                    RoomType = RoomType.PrivateRoom,
-                    RoomName = "Private rooms",
-                    Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
-                    Capacity = 5,
-                };
-
-                await context.Rooms.AddAsync(room);
-
-                var privateRoomAmenities = new List<RoomAmenity>();
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Headphone).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
-            }
-
-            for (int i = 0; i == 0; i++)
-            {
-                var room = new Room
-                {
-                    RoomType = RoomType.PrivateRoom,
-                    RoomName = "Private rooms",
-                    Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
-                    Capacity = 10,
-                };
-
-                await context.Rooms.AddAsync(room);
-
-                var privateRoomAmenities = new List<RoomAmenity>();
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                privateRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Headphone).FirstOrDefault()!.Id,
-                    RoomId = room.Id
-                });
-
-                await context.RoomAmenity.AddRangeAsync(privateRoomAmenities);
             }
             #endregion
 
             #region Meeting rooms
-            for (int i = 0; i < 4; i++)
+            foreach ((int count, int capacity) in new[] { (4, 10), (1, 20) })
             {
-                var meeting = new Room
+                for (int i = 0; i < count; i++)
                 {
-                    RoomType = RoomType.MeetingRoom,
-                    RoomName = "Meeting room",
-                    Description = "Designed for productive meetings, workshops, or client presentations. Equipped with screens, whiteboards, and comfortable seating to keep your sessions running smoothly.",
-                    Capacity = 10
+                    var meeting = new Room
+                    {
+                        RoomType = RoomType.MeetingRoom,
+                        RoomName = "Meeting room",
+                        Description = "Designed for productive meetings, workshops, or client presentations. Equipped with screens, whiteboards, and comfortable seating to keep your sessions running smoothly.",
+                        Capacity = capacity,
+                        Coworking = coworking
+                    };
+
+                    await context.Rooms.AddAsync(meeting);
+
+                    var meetingRoomAmenities = new List<RoomAmenity>
+                {
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Conditioner).Id, Room = meeting },
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Wifi).Id, Room = meeting },
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Headphone).Id, Room = meeting },
+                    new RoomAmenity { AmenityId = amenities.First(a => a.AmenityType == AmenityType.Microphone).Id, Room = meeting },
                 };
 
-                await context.Rooms.AddAsync(meeting);
+                    await context.RoomAmenity.AddRangeAsync(meetingRoomAmenities);
 
-                var meetingRoomAmenities = new List<RoomAmenity>();
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Headphone).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Microphone).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                await context.RoomAmenity.AddRangeAsync(meetingRoomAmenities);
-            }
-
-            for (int i = 0; i == 0; i++)
-            {
-                var meeting = new Room
-                {
-                    RoomType = RoomType.MeetingRoom,
-                    RoomName = "Meeting room",
-                    Description = "Designed for productive meetings, workshops, or client presentations. Equipped with screens, whiteboards, and comfortable seating to keep your sessions running smoothly.",
-                    Capacity = 20
-                };
-
-                await context.Rooms.AddAsync(meeting);
-
-                var meetingRoomAmenities = new List<RoomAmenity>();
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Conditioner).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Wifi).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Headphone).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                meetingRoomAmenities.Add(new RoomAmenity
-                {
-                    AmenityId = amenities.Where(a => a.AmenityType == AmenityType.Microphone).FirstOrDefault()!.Id,
-                    RoomId = meeting.Id
-                });
-
-                await context.RoomAmenity.AddRangeAsync(meetingRoomAmenities);
-
-                var privateImages = new List<string>()
-                {
-                    "meeting1.png",
-                    "meeting2.png",
-                    "meeting3.png"
-                }.Select(path => new RoomPhoto
-                {
-                    RoomId = meeting.Id,
-                    Description = path,
-                    ImagePath = path,
-                    ImageName = path,
-                }).ToList();
-
-                await context.RoomPhoto.AddRangeAsync(privateImages);
+                    if (capacity == 20)
+                    {
+                        var meetingImages = new List<RoomPhoto>
+                    {
+                        new RoomPhoto { Room = meeting, ImageName = "meeting1.png", ImagePath = "meeting1.png", Description = "Meeting room 1" },
+                        new RoomPhoto { Room = meeting, ImageName = "meeting2.png", ImagePath = "meeting2.png", Description = "Meeting room 2" },
+                        new RoomPhoto { Room = meeting, ImageName = "meeting3.png", ImagePath = "meeting3.png", Description = "Meeting room 3" },
+                    };
+                        await context.RoomPhoto.AddRangeAsync(meetingImages);
+                    }
+                }
             }
             #endregion
         }
 
         await context.SaveChangesAsync();
     }
+
 }
